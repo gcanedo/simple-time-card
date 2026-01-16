@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Card Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            font-size: 18px;
+            line-height: 1.5;
+            padding-bottom: 120px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #a01a1a;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            padding: 20px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* Period Settings */
+        .period-settings {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .period-settings label {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .period-settings input[type="date"] {
+            padding: 12px 16px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .period-settings input[type="date"]:focus {
+            border-color: #a01a1a;
+            outline: none;
+        }
+
+        /* Week Block */
+        .week-block {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .week-header {
+            background: #a01a1a;
+            color: white;
+            padding: 18px 25px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-week-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .remove-week-btn:hover {
+            background: white;
+            color: #a01a1a;
+        }
+
+        /* Table Styles */
+        .time-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .time-table th {
+            background: #c62828;
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .time-table td {
+            padding: 12px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .time-table tbody tr:nth-child(odd) {
+            background: #ffffff;
+        }
+
+        .time-table tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .time-table tbody tr:hover {
+            background: #fff3e0;
+        }
+
+        .day-name {
+            font-weight: 700;
+            color: #a01a1a;
+            font-size: 1.1rem;
+            min-width: 100px;
+        }
+
+        /* Time Input Group */
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex-wrap: nowrap;
+        }
+
+        .time-input-group input[type="number"] {
+            width: 55px;
+            padding: 10px 6px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            -moz-appearance: textfield;
+        }
+
+        .time-input-group input[type="number"]::-webkit-outer-spin-button,
+        .time-input-group input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .time-input-group input:focus {
+            border-color: #a01a1a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(160, 26, 26, 0.2);
+        }
+
+        .time-separator {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .ampm-select {
+            padding: 10px 8px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .ampm-select:focus {
+            border-color: #a01a1a;
+            outline: none;
+        }
+
+        /* Break Input */
+        .break-input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .break-input-group input {
+            width: 50px;
+            padding: 10px 6px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            -moz-appearance: textfield;
+        }
+
+        .break-input-group input::-webkit-outer-spin-button,
+        .break-input-group input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .break-input-group input:focus {
+            border-color: #a01a1a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(160, 26, 26, 0.2);
+        }
+
+        /* Daily Total */
+        .daily-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2e7d32;
+            min-width: 80px;
+        }
+
+        .daily-total.error {
+            color: #d32f2f;
+        }
+
+        /* Weekly Subtotal */
+        .weekly-subtotal {
+            background: #ffebee !important;
+            border-top: 3px solid #a01a1a;
+        }
+
+        .weekly-subtotal td {
+            padding: 18px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #a01a1a;
+        }
+
+        .subtotal-value {
+            font-size: 1.5rem;
+            color: #2e7d32;
+        }
+
+        /* Buttons */
+        .add-week-btn {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px 40px;
+            background: #a01a1a;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(160, 26, 26, 0.3);
+        }
+
+        .add-week-btn:hover {
+            background: #c62828;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(160, 26, 26, 0.4);
+        }
+
+        .add-week-btn:active {
+            transform: translateY(0);
+        }
+
+        .clear-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: #666;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .clear-btn:hover {
+            background: #444;
+        }
+
+        /* Grand Total Fixed Bar */
+        .grand-total-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #a01a1a 0%, #c62828 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .grand-total-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .grand-total-label {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .grand-total-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: white;
+            color: #a01a1a;
+            padding: 10px 30px;
+            border-radius: 10px;
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 400px;
+            margin: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            color: #a01a1a;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn.confirm {
+            background: #a01a1a;
+            color: white;
+        }
+
+        .modal-btn.confirm:hover {
+            background: #c62828;
+        }
+
+        .modal-btn.cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-btn.cancel:hover {
+            background: #bdbdbd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .time-table th,
+            .time-table td {
+                padding: 10px 5px;
+                font-size: 0.95rem;
+            }
+
+            .time-input-group input[type="number"] {
+                width: 45px;
+                padding: 8px 4px;
+                font-size: 16px;
+            }
+
+            .ampm-select {
+                padding: 8px 4px;
+                font-size: 14px;
+            }
+
+            .break-input-group input {
+                width: 42px;
+                padding: 8px 4px;
+                font-size: 16px;
+            }
+
+            .day-name {
+                font-size: 0.95rem;
+                min-width: 70px;
+            }
+
+            .daily-total {
+                font-size: 1.1rem;
+                min-width: 60px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .period-settings {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .period-settings > div {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .period-settings input[type="date"] {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .week-block {
+                overflow-x: auto;
+            }
+
+            .time-table {
+                min-width: 700px;
+            }
+
+            .grand-total-value {
+                font-size: 2rem;
+                padding: 8px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏰ Time Card Calculator</h1>
+        <p class="subtitle">Track your work hours easily • Auto-saves as you type</p>
+
+        <div class="period-settings">
+            <div>
+                <label for="startDate">📅 Pay Period Start:</label>
+                <input type="date" id="startDate">
+            </div>
+            <div>
+                <label for="endDate">📅 Pay Period End:</label>
+                <input type="date" id="endDate">
+            </div>
+        </div>
+
+        <div id="weeksContainer"></div>
+
+        <button class="add-week-btn" onclick="addWeek()">
+            ➕ Add Another Week
+        </button>
+
+        <button class="clear-btn" onclick="showClearModal()">
+            🗑️ Clear All Data
+        </button>
+    </div>
+
+    <div class="grand-total-bar">
+        <div class="grand-total-content">
+            <span class="grand-total-label">📊 GRAND TOTAL HOURS:</span>
+            <span class="grand-total-value" id="grandTotal">0.00</span>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="clearModal">
+        <div class="modal-content">
+            <h2>⚠️ Clear All Data?</h2>
+            <p>This will delete all your entered times and reset everything. This cannot be undone!</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="hideClearModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="clearAllData()">Yes, Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Day names for the week
+        const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        
+        // State management
+        let state = {
+            startDate: '',
+            endDate: '',
+            weeks: []
+        };
+
+        // Initialize empty week data
+        function createEmptyWeek(weekNumber) {
+            return {
+                weekNumber: weekNumber,
+                days: DAYS.map(day => ({
+                    day: day,
+                    startHour: '',
+                    startMin: '',
+                    startAmPm: 'AM',
+                    endHour: '',
+                    endMin: '',
+                    endAmPm: 'PM',
+                    breakHour: '0',
+                    breakMin: '0'
+                }))
+            };
+        }
+
+        // Load state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('timeCardData');
+            if (saved) {
+                try {
+                    state = JSON.parse(saved);
+                } catch (e) {
+                    initDefaultState();
+                }
+            } else {
+                initDefaultState();
+            }
+        }
+
+        // Initialize default state (2 weeks)
+        function initDefaultState() {
+            state = {
+                startDate: '',
+                endDate: '',
+                weeks: [createEmptyWeek(1), createEmptyWeek(2)]
+            };
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('timeCardData', JSON.stringify(state));
+        }
+
+        // Convert 12h to 24h format
+        function to24Hour(hour, minute, ampm) {
+            let h = parseInt(hour) || 0;
+            let m = parseInt(minute) || 0;
+            
+            if (ampm === 'AM') {
+                if (h === 12) h = 0;
+            } else {
+                if (h !== 12) h += 12;
+            }
+            
+            return h * 60 + m; // Return total minutes
+        }
+
+        // Calculate daily total in decimal hours
+        function calculateDailyTotal(dayData) {
+            const { startHour, startMin, startAmPm, endHour, endMin, endAmPm, breakHour, breakMin } = dayData;
+            
+            // Check if we have valid start and end times
+            if (!startHour || !endHour) return null;
+            
+            const startMinutes = to24Hour(startHour, startMin, startAmPm);
+            let endMinutes = to24Hour(endHour, endMin, endAmPm);
+            
+            // Handle overnight shifts (end time before start time)
+            if (endMinutes <= startMinutes) {
+                endMinutes += 24 * 60; // Add 24 hours
+            }
+            
+            const breakMinutes = (parseInt(breakHour) || 0) * 60 + (parseInt(breakMin) || 0);
+            
+            let totalMinutes = endMinutes - startMinutes - breakMinutes;
+            
+            if (totalMinutes < 0) totalMinutes = 0;
+            
+            return totalMinutes / 60; // Return decimal hours
+        }
+
+        // Format decimal hours
+        function formatHours(hours) {
+            if (hours === null || isNaN(hours)) return '--';
+            return hours.toFixed(2);
+        }
+
+        // Generate HTML for a week block
+        function generateWeekHTML(week, weekIndex) {
+            const showRemove = state.weeks.length > 1;
+            
+            let html = `
+                <div class="week-block" data-week="${weekIndex}">
+                    <div class="week-header">
+                        <span>📆 Week ${week.weekNumber}</span>
+                        ${showRemove ? `<button class="remove-week-btn" onclick="removeWeek(${weekIndex})">✕ Remove Week</button>` : ''}
+                    </div>
+                    <table class="time-table">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Break</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            let weeklyTotal = 0;
+            
+            week.days.forEach((day, dayIndex) => {
+                const dailyTotal = calculateDailyTotal(day);
+                if (dailyTotal !== null) weeklyTotal += dailyTotal;
+                
+                html += `
+                    <tr>
+                        <td class="day-name">${day.day}</td>
+                        <td>
+                            <div class="time-input-group">
+                                <input type="number" min="1" max="12" placeholder="HH" 
+                                    value="${day.startHour}"
+                                    data-week="${weekIndex}" data-day="${dayIndex}" data-field="startHour"
+                                    aria-label="Start hour">
+                                <span class="time-separator">:</span>
+                                <input type="number" min="0" max="59" placeholder="MM"
+                                    value="${day.startMin}"
+                                    data-week="${weekIndex}" data-day="${dayIndex}" data-field="startMin"
+                                    aria-label="Start minute">
+                                <select class="ampm-select"
+                                    data-week="${weekIndex}" data-day="${dayIndex}" data-field="startAmPm"
+                                    aria-label="Start AM/PM">
+                                    <option value="AM" ${day.startAmPm === 'AM' ? 'selected' : ''}>AM</option>
+                                    <option value="PM" ${day.startAmPm === 'PM' ? 'selected' : ''}>PM</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="time-input-group">
+                                <input type="number" min="1" max="12" placeholder="HH"
+                                    value="${day.endHour}"
+                                    data-week="${weekIndex}" data-day="${dayIndex}" data-field="endHour"
+                                    aria-label="End hour">
+                                <span class="time-separator">:</span>
+                                <input type="number" min="0" max="59" placeholder="MM"
+                                    value="${day.endMin}"
+                                    data-week="${weekIndex}" data-day="${dayIndex}" data-field="endMin"
+                                    aria-label="End minute">
+                                <select class="ampm-select"
+                                    data-week="${weekIndex}" data-day="${dayIndex}" data-field="endAmPm"
+                                    aria-label="End AM/PM">
+                                    <option value="AM" ${day.endAmPm === 'AM' ? 'selected' : ''}>AM</option>
+                                    <option value="PM" ${day.endAmPm === 'PM' ? 'selected' : ''}>PM</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="break-input-group">
+                                <input type="number" min="0" max="23" placeholder="0"
+                                    value="${day.breakHour}"
+                                    data-week="${weekIndex}" data-day="${dayIndex}" data-field="breakHour"
+                                    aria-label="Break hours">
+                                <span class="time-separator">:</span>
+                                <input type="number" min="0" max="59" placeholder="0"
+                                    value="${day.breakMin}"
+                                    data-week="${weekIndex}" data-day="${dayIndex}" data-field="breakMin"
+                                    aria-label="Break minutes">
+                            </div>
+                        </td>
+                        <td class="daily-total ${dailyTotal === null ? '' : (dailyTotal === 0 && day.startHour && day.endHour ? 'error' : '')}">
+                            ${formatHours(dailyTotal)}
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        <tr class="weekly-subtotal">
+                            <td colspan="4" style="text-align: right;">Weekly Subtotal:</td>
+                            <td class="subtotal-value">${weeklyTotal.toFixed(2)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            `;
+            
+            return html;
+        }
+
+        // Render all weeks
+        function render() {
+            const container = document.getElementById('weeksContainer');
+            container.innerHTML = state.weeks.map((week, index) => generateWeekHTML(week, index)).join('');
+            
+            // Update period dates
+            document.getElementById('startDate').value = state.startDate;
+            document.getElementById('endDate').value = state.endDate;
+            
+            // Calculate and update grand total
+            updateGrandTotal();
+        }
+
+        // Update grand total
+        function updateGrandTotal() {
+            let grandTotal = 0;
+            
+            state.weeks.forEach(week => {
+                week.days.forEach(day => {
+                    const dailyTotal = calculateDailyTotal(day);
+                    if (dailyTotal !== null) grandTotal += dailyTotal;
+                });
+            });
+            
+            document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+        }
+
+        // Add a new week
+        function addWeek() {
+            const newWeekNumber = state.weeks.length + 1;
+            state.weeks.push(createEmptyWeek(newWeekNumber));
+            saveState();
+            render();
+            
+            // Scroll to the new week
+            setTimeout(() => {
+                const weeks = document.querySelectorAll('.week-block');
+                weeks[weeks.length - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Remove a week
+        function removeWeek(weekIndex) {
+            if (state.weeks.length <= 1) return;
+            
+            state.weeks.splice(weekIndex, 1);
+            
+            // Renumber weeks
+            state.weeks.forEach((week, index) => {
+                week.weekNumber = index + 1;
+            });
+            
+            saveState();
+            render();
+        }
+
+        // Show clear modal
+        function showClearModal() {
+            document.getElementById('clearModal').classList.add('active');
+        }
+
+        // Hide clear modal
+        function hideClearModal() {
+            document.getElementById('clearModal').classList.remove('active');
+        }
+
+        // Clear all data
+        function clearAllData() {
+            localStorage.removeItem('timeCardData');
+            initDefaultState();
+            saveState();
+            render();
+            hideClearModal();
+        }
+
+        // Handle input changes using event delegation
+        function handleInput(e) {
+            const target = e.target;
+            const weekIndex = target.dataset.week;
+            const dayIndex = target.dataset.day;
+            const field = target.dataset.field;
+            
+            if (weekIndex !== undefined && dayIndex !== undefined && field) {
+                let value = target.value;
+                
+                // Validate number inputs
+                if (target.type === 'number') {
+                    value = value.replace(/[^0-9]/g, '');
+                    
+                    // Apply constraints
+                    if (field === 'startHour' || field === 'endHour') {
+                        if (parseInt(value) > 12) value = '12';
+                        if (parseInt(value) < 1 && value !== '') value = '1';
+                    } else if (field === 'startMin' || field === 'endMin' || field === 'breakMin') {
+                        if (parseInt(value) > 59) value = '59';
+                    } else if (field === 'breakHour') {
+                        if (parseInt(value) > 23) value = '23';
+                    }
+                    
+                    target.value = value;
+                }
+                
+                // Update state
+                state.weeks[weekIndex].days[dayIndex][field] = value;
+                saveState();
+                
+                // Update totals without full re-render for better performance
+                const row = target.closest('tr');
+                if (row) {
+                    const dayData = state.weeks[weekIndex].days[dayIndex];
+                    const dailyTotal = calculateDailyTotal(dayData);
+                    const totalCell = row.querySelector('.daily-total');
+                    if (totalCell) {
+                        totalCell.textContent = formatHours(dailyTotal);
+                        totalCell.classList.toggle('error', dailyTotal === 0 && dayData.startHour && dayData.endHour);
+                    }
+                    
+                    // Update weekly subtotal
+                    let weeklyTotal = 0;
+                    state.weeks[weekIndex].days.forEach(d => {
+                        const dt = calculateDailyTotal(d);
+                        if (dt !== null) weeklyTotal += dt;
+                    });
+                    const weekBlock = target.closest('.week-block');
+                    const subtotalCell = weekBlock.querySelector('.subtotal-value');
+                    if (subtotalCell) {
+                        subtotalCell.textContent = weeklyTotal.toFixed(2);
+                    }
+                }
+                
+                updateGrandTotal();
+            }
+        }
+
+        // Handle period date changes
+        function handlePeriodChange(e) {
+            if (e.target.id === 'startDate') {
+                state.startDate = e.target.value;
+            } else if (e.target.id === 'endDate') {
+                state.endDate = e.target.value;
+            }
+            saveState();
+        }
+
+        // Initialize the app
+        function init() {
+            loadState();
+            render();
+            
+            // Event delegation for time inputs
+            document.getElementById('weeksContainer').addEventListener('input', handleInput);
+            document.getElementById('weeksContainer').addEventListener('change', handleInput);
+            
+            // Period date listeners
+            document.getElementById('startDate').addEventListener('change', handlePeriodChange);
+            document.getElementById('endDate').addEventListener('change', handlePeriodChange);
+            
+            // Close modal on overlay click
+            document.getElementById('clearModal').addEventListener('click', function(e) {
+                if (e.target === this) hideClearModal();
+            });
+            
+            // Keyboard accessibility for modal
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('clearModal').classList.contains('active')) {
+                    hideClearModal();
+                }
+            });
+        }
+
+        // Run initialization when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
