@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Card Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -47,7 +49,7 @@
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
@@ -80,7 +82,7 @@
             background: white;
             border-radius: 12px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
@@ -96,7 +98,7 @@
         }
 
         .remove-week-btn {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 2px solid white;
             padding: 8px 16px;
@@ -169,11 +171,13 @@
             border-radius: 6px;
             text-align: center;
             -moz-appearance: textfield;
+            appearance: textfield;
         }
 
         .time-input-group input[type="number"]::-webkit-outer-spin-button,
         .time-input-group input[type="number"]::-webkit-inner-spin-button {
             -webkit-appearance: none;
+            appearance: none;
             margin: 0;
         }
 
@@ -293,7 +297,7 @@
             background: linear-gradient(135deg, #a01a1a 0%, #c62828 100%);
             color: white;
             padding: 20px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
             z-index: 1000;
         }
 
@@ -329,7 +333,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 2000;
             justify-content: center;
             align-items: center;
@@ -346,7 +350,7 @@
             text-align: center;
             max-width: 400px;
             margin: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         .modal-content h2 {
@@ -397,6 +401,7 @@
 
         /* Responsive Design */
         @media (max-width: 900px) {
+
             .time-table th,
             .time-table td {
                 padding: 10px 5px;
@@ -406,7 +411,10 @@
                 display: none;
             }
 
-            .time-table, .time-table tbody, .time-table tr, .time-table td {
+            .time-table,
+            .time-table tbody,
+            .time-table tr,
+            .time-table td {
                 display: block;
                 width: 100%;
             }
@@ -415,10 +423,10 @@
                 margin-bottom: 20px;
                 background: white;
                 border-radius: 8px;
-                box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
                 padding: 15px;
             }
-            
+
             .time-table td {
                 text-align: left;
                 padding: 5px 0;
@@ -457,12 +465,13 @@
 
             .time-input-group input[type="number"] {
                 width: 60px;
-                height: 48px; /* Touch target */
-                font-size: 16px; /* Prevent zoom */
+                height: 48px;
+                /* Touch target */
+                font-size: 16px;
+                /* Prevent zoom */
             }
 
-            .ampm-select {
-            }
+
 
             .daily-total {
                 font-size: 1.1rem;
@@ -480,7 +489,7 @@
                 align-items: stretch;
             }
 
-            .period-settings > div {
+            .period-settings>div {
                 display: flex;
                 flex-direction: column;
                 gap: 8px;
@@ -491,11 +500,19 @@
                 width: 100%;
             }
 
+            #employeeName {
+                width: 100% !important;
+                margin-bottom: 10px;
+                margin-left: 0 !important;
+            }
+
             .week-block {
                 overflow-x: auto;
             }
 
-            .add-week-btn, .clear-btn {
+            .add-week-btn,
+            .clear-btn,
+            .pdf-btn {
                 min-height: 54px;
             }
 
@@ -504,14 +521,40 @@
                 padding: 8px 20px;
             }
         }
+
+        .pdf-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pdf-btn:hover {
+            background: #1b5e20;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>⏰ Time Card Calculator</h1>
         <p class="subtitle">Track your work hours easily • Auto-saves as you type</p>
 
         <div class="period-settings">
+            <div style="flex-basis: 100%; text-align: center; margin-bottom: 15px;">
+                <label for="employeeName" style="margin-right: 10px;">👤 Employee Name:</label>
+                <input type="text" id="employeeName" placeholder="John Doe"
+                    style="padding: 12px 16px; font-size: 18px; border: 2px solid #ccc; border-radius: 8px; width: 300px;">
+            </div>
             <div>
                 <label for="startDate">📅 Pay Period Start:</label>
                 <input type="date" id="startDate">
@@ -528,15 +571,21 @@
             ➕ Add Another Week
         </button>
 
-        <button class="clear-btn" onclick="showClearModal()">
-            🗑️ Clear All Data
-        </button>
+        <div
+            style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 20px auto; max-width: 620px;">
+            <button class="clear-btn" onclick="showClearModal()" style="margin: 0; flex: 1;">
+                🗑️ Clear All
+            </button>
+            <button class="pdf-btn" onclick="generatePDF()" style="margin: 0; flex: 1;">
+                📄 Download PDF
+            </button>
+        </div>
     </div>
 
     <div class="grand-total-bar">
         <div class="grand-total-content">
-            <span class="grand-total-label">📊 GRAND TOTAL HOURS:</span>
-            <span class="grand-total-value" id="grandTotal">0.00</span>
+            <span class="grand-total-label">📊 GRAND TOTAL:</span>
+            <span class="grand-total-value" id="grandTotal">00:00</span>
         </div>
     </div>
 
@@ -555,9 +604,10 @@
     <script>
         // Day names for the week
         const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        
+
         // State management
         let state = {
+            employeeName: '',
             startDate: '',
             endDate: '',
             weeks: []
@@ -601,9 +651,9 @@
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = now.getDate();
             const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
-            
+
             let startDate, endDate;
-            
+
             if (day <= 15) {
                 startDate = `${year}-${month}-01`;
                 endDate = `${year}-${month}-15`;
@@ -613,6 +663,7 @@
             }
 
             state = {
+                employeeName: '',
                 startDate: startDate,
                 endDate: endDate,
                 weeks: [createEmptyWeek(1), createEmptyWeek(2)]
@@ -628,48 +679,53 @@
         function to24Hour(hour, minute, ampm) {
             let h = parseInt(hour) || 0;
             let m = parseInt(minute) || 0;
-            
+
             if (ampm === 'AM') {
                 if (h === 12) h = 0;
             } else {
                 if (h !== 12) h += 12;
             }
-            
+
             return h * 60 + m; // Return total minutes
         }
 
         // Calculate daily total in decimal hours
         function calculateDailyTotal(dayData) {
             const { startHour, startMin, startAmPm, endHour, endMin, endAmPm } = dayData;
-            
+
             // Check if we have valid start and end times
             if (!startHour || !endHour) return null;
-            
+
             const startMinutes = to24Hour(startHour, startMin, startAmPm);
             let endMinutes = to24Hour(endHour, endMin, endAmPm);
-            
+
             // Handle overnight shifts (end time before start time)
             if (endMinutes <= startMinutes) {
                 endMinutes += 24 * 60; // Add 24 hours
             }
-            
+
             let totalMinutes = endMinutes - startMinutes;
-            
+
             if (totalMinutes < 0) totalMinutes = 0;
-            
-            return totalMinutes / 60; // Return decimal hours
+
+            return totalMinutes; // Return total minutes
         }
 
-        // Format decimal hours
-        function formatHours(hours) {
-            if (hours === null || isNaN(hours)) return '--';
-            return hours.toFixed(2);
+        // Format minutes to HH:MM
+        function formatMinutesToHHMM(totalMinutes) {
+            if (totalMinutes === null || isNaN(totalMinutes)) return '--';
+
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
         }
+
 
         // Generate HTML for a week block
         function generateWeekHTML(week, weekIndex) {
             const showRemove = state.weeks.length > 1;
-            
+
             let html = `
                 <div class="week-block" data-week="${weekIndex}">
                     <div class="week-header">
@@ -687,13 +743,13 @@
                         </thead>
                         <tbody>
             `;
-            
+
             let weeklyTotal = 0;
-            
+
             week.days.forEach((day, dayIndex) => {
                 const dailyTotal = calculateDailyTotal(day);
                 if (dailyTotal !== null) weeklyTotal += dailyTotal;
-                
+
                 html += `
                     <tr>
                         <td class="day-name">${day.day}</td>
@@ -736,22 +792,22 @@
                             </div>
                         </td>
                         <td class="daily-total ${dailyTotal === null ? '' : (dailyTotal === 0 && day.startHour && day.endHour ? 'error' : '')}" data-label="Total">
-                            ${formatHours(dailyTotal)}
+                            ${formatMinutesToHHMM(dailyTotal)}
                         </td>
                     </tr>
                 `;
             });
-            
+
             html += `
                         <tr class="weekly-subtotal">
                             <td colspan="4" style="text-align: right;">Weekly Subtotal:</td>
-                            <td class="subtotal-value">${weeklyTotal.toFixed(2)}</td>
+                            <td class="subtotal-value">${formatMinutesToHHMM(weeklyTotal)}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             `;
-            
+
             return html;
         }
 
@@ -759,11 +815,12 @@
         function render() {
             const container = document.getElementById('weeksContainer');
             container.innerHTML = state.weeks.map((week, index) => generateWeekHTML(week, index)).join('');
-            
+
             // Update period dates
             document.getElementById('startDate').value = state.startDate;
             document.getElementById('endDate').value = state.endDate;
-            
+            document.getElementById('employeeName').value = state.employeeName || '';
+
             // Calculate and update grand total
             updateGrandTotal();
         }
@@ -771,15 +828,15 @@
         // Update grand total
         function updateGrandTotal() {
             let grandTotal = 0;
-            
+
             state.weeks.forEach(week => {
                 week.days.forEach(day => {
                     const dailyTotal = calculateDailyTotal(day);
                     if (dailyTotal !== null) grandTotal += dailyTotal;
                 });
             });
-            
-            document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+
+            document.getElementById('grandTotal').textContent = formatMinutesToHHMM(grandTotal);
         }
 
         // Add a new week
@@ -788,7 +845,7 @@
             state.weeks.push(createEmptyWeek(newWeekNumber));
             saveState();
             render();
-            
+
             // Scroll to the new week
             setTimeout(() => {
                 const weeks = document.querySelectorAll('.week-block');
@@ -799,14 +856,14 @@
         // Remove a week
         function removeWeek(weekIndex) {
             if (state.weeks.length <= 1) return;
-            
+
             state.weeks.splice(weekIndex, 1);
-            
+
             // Renumber weeks
             state.weeks.forEach((week, index) => {
                 week.weekNumber = index + 1;
             });
-            
+
             saveState();
             render();
         }
@@ -836,14 +893,14 @@
             const weekIndex = target.dataset.week;
             const dayIndex = target.dataset.day;
             const field = target.dataset.field;
-            
+
             if (weekIndex !== undefined && dayIndex !== undefined && field) {
                 let value = target.value;
-                
+
                 // Validate number inputs
                 if (target.type === 'number') {
                     value = value.replace(/[^0-9]/g, '');
-                    
+
                     // Apply constraints
                     if (field === 'startHour' || field === 'endHour') {
                         if (parseInt(value) > 12) value = '12';
@@ -851,14 +908,14 @@
                     } else if (field === 'startMin' || field === 'endMin') {
                         if (parseInt(value) > 59) value = '59';
                     }
-                    
+
                     target.value = value;
                 }
-                
+
                 // Update state
                 state.weeks[weekIndex].days[dayIndex][field] = value;
                 saveState();
-                
+
                 // Update totals without full re-render for better performance
                 const row = target.closest('tr');
                 if (row) {
@@ -866,10 +923,10 @@
                     const dailyTotal = calculateDailyTotal(dayData);
                     const totalCell = row.querySelector('.daily-total');
                     if (totalCell) {
-                        totalCell.textContent = formatHours(dailyTotal);
+                        totalCell.textContent = formatMinutesToHHMM(dailyTotal);
                         totalCell.classList.toggle('error', dailyTotal === 0 && dayData.startHour && dayData.endHour);
                     }
-                    
+
                     // Update weekly subtotal
                     let weeklyTotal = 0;
                     state.weeks[weekIndex].days.forEach(d => {
@@ -879,10 +936,10 @@
                     const weekBlock = target.closest('.week-block');
                     const subtotalCell = weekBlock.querySelector('.subtotal-value');
                     if (subtotalCell) {
-                        subtotalCell.textContent = weeklyTotal.toFixed(2);
+                        subtotalCell.textContent = formatMinutesToHHMM(weeklyTotal);
                     }
                 }
-                
+
                 updateGrandTotal();
             }
         }
@@ -893,6 +950,8 @@
                 state.startDate = e.target.value;
             } else if (e.target.id === 'endDate') {
                 state.endDate = e.target.value;
+            } else if (e.target.id === 'employeeName') {
+                state.employeeName = e.target.value;
             }
             saveState();
         }
@@ -901,25 +960,189 @@
         function init() {
             loadState();
             render();
-            
+
             // Event delegation for time inputs
             document.getElementById('weeksContainer').addEventListener('input', handleInput);
             document.getElementById('weeksContainer').addEventListener('change', handleInput);
-            
+
             // Period date listeners
             document.getElementById('startDate').addEventListener('change', handlePeriodChange);
             document.getElementById('endDate').addEventListener('change', handlePeriodChange);
-            
+            document.getElementById('employeeName').addEventListener('input', handlePeriodChange);
+
             // Close modal on overlay click
-            document.getElementById('clearModal').addEventListener('click', function(e) {
+            document.getElementById('clearModal').addEventListener('click', function (e) {
                 if (e.target === this) hideClearModal();
             });
-            
+
             // Keyboard accessibility for modal
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && document.getElementById('clearModal').classList.contains('active')) {
                     hideClearModal();
                 }
+            });
+        }
+
+        // Generate PDF
+        // Generate PDF
+        // Generate PDF - Rewritten for Print Specs
+        function generatePDF() {
+            // 1. Create temporary container with "Old School" specific constraints
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.top = '0';
+            tempDiv.style.left = '0';
+            tempDiv.style.zIndex = '-1';   // User Constraint
+            tempDiv.style.backgroundColor = 'white'; // User Constraint
+            tempDiv.style.width = '700px'; // Reduced to fit print margins
+            tempDiv.style.visibility = 'hidden'; // Hide from user but allow layout calculation
+
+            // Basic Font Setup
+            tempDiv.style.fontFamily = 'Helvetica, Arial, sans-serif';
+            tempDiv.style.color = '#000'; // Black only
+
+            // Get Data safely
+            const name = state.employeeName || 'Unknown';
+            const start = state.startDate || '--';
+            const end = state.endDate || '--';
+
+            let grandTotal = 0;
+
+            // 2. Build HTML using Tables (No Flex/Grid)
+            let html = `
+                <div style="padding: 15px;">
+                    <table width="100%" border="0" cellpadding="4" cellspacing="0" style="margin-bottom: 15px; border-bottom: 2px solid #000;">
+                        <tr>
+                            <td align="center">
+                                <h1 style="font-size: 18pt; margin: 0; text-transform: uppercase; letter-spacing: 1px;">Time Card Report</h1>
+                                <div style="font-size: 11pt; margin-top: 5px;">
+                                    <strong>Employee:</strong> ${name} &nbsp;&nbsp;|&nbsp;&nbsp; 
+                                    <strong>Period:</strong> ${start} TO ${end}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+            `;
+
+            // Iterate Weeks
+            state.weeks.forEach(week => {
+                let weeklyTotal = 0;
+                // Calculate weekly totals first
+                week.days.forEach(day => {
+                    const dt = calculateDailyTotal(day);
+                    if (dt !== null) weeklyTotal += dt;
+                });
+                grandTotal += weeklyTotal;
+
+                html += `
+                    <div style="margin-bottom: 15px; page-break-inside: avoid;">
+                        <div style="font-weight: bold; font-size: 11pt; margin-bottom: 5px; border-bottom: 1px solid #000; padding-bottom: 2px;">
+                            WEEK ${week.weekNumber}
+                        </div>
+                        <table width="100%" border="0" cellpadding="3" cellspacing="0" style="border: 1px solid #000; border-collapse: collapse; font-size: 10pt;">
+                            <tr style="background-color: #eee;">
+                                <th align="left" style="border: 1px solid #000; padding: 3px;">Day</th>
+                                <th align="center" style="border: 1px solid #000; padding: 3px;">In</th>
+                                <th align="center" style="border: 1px solid #000; padding: 3px;">Out</th>
+                                <th align="right" style="border: 1px solid #000; padding: 3px;">Total</th>
+                            </tr>
+                 `;
+
+                week.days.forEach(day => {
+                    const dailyTotal = calculateDailyTotal(day);
+
+                    // Format Times
+                    const inTime = (day.startHour)
+                        ? `${day.startHour}:${(day.startMin || '00').padStart(2, '0')} ${day.startAmPm}`
+                        : '--';
+                    const outTime = (day.endHour)
+                        ? `${day.endHour}:${(day.endMin || '00').padStart(2, '0')} ${day.endAmPm}`
+                        : '--';
+                    const totalStr = formatMinutesToHHMM(dailyTotal);
+
+                    html += `
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 3px;">${day.day}</td>
+                            <td align="center" style="border: 1px solid #000; padding: 3px;">${inTime}</td>
+                            <td align="center" style="border: 1px solid #000; padding: 3px;">${outTime}</td>
+                            <td align="right" style="border: 1px solid #000; padding: 3px;">${totalStr}</td>
+                        </tr>
+                    `;
+                });
+
+                // Weekly Subtotal
+                html += `
+                        <tr style="background-color: #eee; font-weight: bold;">
+                            <td colspan="3" align="right" style="border: 1px solid #000; padding: 3px;">Weekly Subtotal:</td>
+                            <td align="right" style="border: 1px solid #000; padding: 3px;">${formatMinutesToHHMM(weeklyTotal)}</td>
+                        </tr>
+                        </table>
+                    </div>
+                 `;
+            });
+
+            // Grand Total & Signature
+            html += `
+                <table width="100%" border="0" cellpadding="5" cellspacing="0" style="margin-top: 10px; page-break-inside: avoid;">
+                    <tr>
+                        <td align="right">
+                            <div style="display: inline-block; border: 2px solid #000; padding: 8px 15px; font-weight: bold; font-size: 12pt; background: #eee;">
+                                GRAND TOTAL: ${formatMinutesToHHMM(grandTotal)}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 40px;">
+                    <tr>
+                        <td width="55%" style="vertical-align: bottom;">
+                            <div style="border-top: 1px solid #000; padding-top: 5px; font-size: 10pt;">
+                                <strong>Employee Signature</strong>
+                            </div>
+                        </td>
+                        <td width="10%"></td>
+                        <td width="35%" style="vertical-align: bottom;">
+                            <div style="border-top: 1px solid #000; padding-top: 5px; font-size: 10pt;">
+                                <strong>Date</strong>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+            `;
+
+            tempDiv.innerHTML = html;
+            document.body.appendChild(tempDiv);
+
+            // CRITICAL FIX: Force layout calculation by temporarily making visible and relative
+            tempDiv.style.position = 'relative';
+            tempDiv.style.visibility = 'visible';
+            tempDiv.style.zIndex = '9999'; // Bring to front temporarily
+
+            // Allow browser to calculate layout
+            const height = tempDiv.offsetHeight;
+
+            window.scrollTo(0, 0);
+
+            // Generate filename
+            const safeName = name.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'employee';
+            const today = new Date().toISOString().split('T')[0];
+            const filename = `TimeCard_${safeName}_${today}.pdf`;
+
+            const opt = {
+                margin: 0.25,
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // Save & Clean
+            html2pdf().set(opt).from(tempDiv).save().then(() => {
+                document.body.removeChild(tempDiv);
+            }).catch(err => {
+                console.error('PDF generation failed:', err);
+                document.body.removeChild(tempDiv);
             });
         }
 
@@ -927,4 +1150,5 @@
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
+
 </html>
